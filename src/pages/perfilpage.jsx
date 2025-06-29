@@ -18,7 +18,6 @@ const PerfilPage = () => {
   const handleSave = (e) => {
     e.preventDefault();
     alert("Datos guardados correctamente ✅");
-    // Aquí podrías agregar lógica para guardar en backend o localStorage
   };
 
   return (
