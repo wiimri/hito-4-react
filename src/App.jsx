@@ -5,6 +5,8 @@ import Home from "./components/Home";
 import Footer from "./components/Footer";
 import LoginPage from "./pages/loginpage";
 import RegisterPage from "./pages/registerpage";
+import PerfilPage from "./pages/perfilpage";
+
 import "./App.css";
 
 function AppContent({ token, setToken }) {
@@ -18,6 +20,7 @@ function AppContent({ token, setToken }) {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage setToken={setToken} />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/perfil" element={<PerfilPage />} />
       </Routes>
       {!hideLayout && <Footer />}
     </>
