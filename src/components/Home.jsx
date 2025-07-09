@@ -1,39 +1,37 @@
-import CardPizza from "./CardPizza";
-import Header from "./Header";
+import React from 'react';
+import CardPizza from './CardPizza';
+import { pizzas } from '../data/pizzas';
 
-const Home = () => {
+const Home = ({ cart, setCart }) => {
   return (
-    <>
-      <Header />
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col-md-4">
+    <div className="home-container container mt-5">
+      <h1 className="mb-4">Pizzas disponibles</h1>
+      <div className="row">
+        {pizzas.map((pizza, index) => (
+          <div className="col-md-4 mb-4" key={index}>
             <CardPizza
-              img="https://firebasestorage.googleapis.com/v0/b/apis-varias-mias.appspot.com/o/pizzeria%2Fpizza-1239077_640_cl.jpg?alt=media&token=6a9a33da-5c00-49d4-9080-784dcc87ec2c"
-              name="Pizza Napolitana"
-              ingridients="Mozzarella, Tomates, Jamon, Orégano"
-              price="$5.950"
+              nombre={pizza.nombre}
+              precio={pizza.precio}
+              ingredientes={pizza.ingredientes}
+              imagen={pizza.imagen}
+              onAdd={() => {
+                const exists = cart.find(p => p.nombre === pizza.nombre);
+                if (exists) {
+                  const updated = cart.map(p =>
+                    p.nombre === pizza.nombre
+                      ? { ...p, cantidad: p.cantidad + 1 }
+                      : p
+                  );
+                  setCart(updated);
+                } else {
+                  setCart([...cart, { ...pizza, cantidad: 1 }]);
+                }
+              }}
             />
           </div>
-          <div className="col-md-4">
-            <CardPizza
-              img="https://firebasestorage.googleapis.com/v0/b/apis-varias-mias.appspot.com/o/pizzeria%2Fcheese-164872_640_com.jpg?alt=media&token=18b2b821-4d0d-43f2-a1c6-8c57bc388fab"
-              name="Pizza Española"
-              ingridients="Mozzarella, Gorgonzola, Parmesano, Provolone"
-              price="$6.950"
-            />
-          </div>
-          <div className="col-md-4">
-            <CardPizza
-              img="https://firebasestorage.googleapis.com/v0/b/apis-varias-mias.appspot.com/o/pizzeria%2Fpizza-1239077_640_com.jpg?alt=media&token=e7cde87a-08d5-4040-ac54-90f6c31eb3e3"
-              name="Pizza Pepperoni"
-              ingridients="Mozzarella, Pepperoni, Orégano"
-              price="$6.950"
-            />
-          </div>
-        </div>
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 
