@@ -1,33 +1,43 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import { readFile } from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 const app = express();
-const port = 5000;
+const PORT = 5000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 
-const pizzas = [
-  {
-    id: "p001",
-    name: "napolitana",
-    desc: "La pizza napolitana, de masa tierna y delgada pero bordes altos...",
-    img: "../src/assets/img/pizza-napolitana.jpg",
-    ingredients: ["mozzarella", "tomates", "jamón", "orégano"],
-    price: 5950
-  },
-  {
-    id: "p002",
-    name: "margarita",
-    desc: "La pizza es una preparación culinaria...",
-    img: "../src/assets/img/pizza-margarita.jpg",
-    ingredients: ["queso", "salsa de tomate", "albahaca"],
-    price: 5500
+app.get('/api/pizzas', async (req, res) => {
+  try {
+    const data = await readFile(path.join(__dirname, 'data', 'pizzas.json'), 'utf8');
+    const pizzas = JSON.parse(data);
+    res.json(pizzas);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al leer el archivo de pizzas' });
   }
-];
-
-app.get('/api/pizzas', (req, res) => {
-  res.json(pizzas);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port http://localhost:${port}`);
+app.get('/api/pizzas/:id', async (req, res) => {
+  try {
+    const data = await readFile(path.join(__dirname, 'data', 'pizzas.json'), 'utf8');
+    const pizzas = JSON.parse(data);
+    const pizza = pizzas.find(p => p.id === req.params.id);
+
+    if (!pizza) {
+      return res.status(404).json({ error: 'Pizza no encontrada' });
+    }
+
+    res.json(pizza);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener la pizza por ID' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Servidor backend corriendo en http://localhost:${PORT}`);
 });
